@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RObot game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="game-container">
+<div class="terrain"></div>
+                  <div id="customization-menu">
+                  <h2 class="menu-title">My robot</h2>
+                  <input type="text" id="name-input" class="menu-input" placeholder="Enter robot name" maxlength="15">
+                  <div class="color-picker-container">
+                      <label for="color-input">Robot Color:</label>
+                      <input type="color" id="color-input" value="#4a90e2">
+                      <select id="difficulty-select">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                  </div>
+                  <div class="movement-toggle">
+                  <label>
+                  <input type="checkbox" id="movement-toggle" checked>
+                  <span>Enable robot movement</span>
+                  </label>
+                  </div>
+                  <button class="start-button" onclick="startCustomGame()">Launch Mission</button>
+                                    </div>
+                                    
+                                    <div id="robot">
+                                        <div id="robot-name"></div>
+                                        <div class="robot-body"></div>
+                                        <div class="robot-head">
+                                            <div class="robot-eye"></div>
+                                            <div class="robot-wheel-left"></div>
+                                            <div class="robot-wheel-right"></div>
+                                        </div>
+                                        <div class="robot-arm"></div>
+                                    </div>
+                                    
+                                    <div id="enemy">
+                                        <div class="aircraft">
+                                            <div class="aircraft-wing"></div>
+                                            <div class="aircraft-body"></div>
+                                            <div class="aircraft-window"></div>
+                                            <div class="engine-glow" style="left: 10px; top: 45%;"></div>
+                                            <div class="engine-glow" style="right: 10px; top: 45%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script src="scrept.js"></script>
+
+</body>
+</html>
