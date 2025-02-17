@@ -48,12 +48,36 @@
             text-decoration: underline;
         }
         .code-block {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 4px;
-            font-family: monospace;
-            white-space: pre;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+            overflow-x: auto;
             margin: 1rem 0;
+            white-space: pre;
+        }
+        .comment {
+            color: #6A9955;
+        }
+        .keyword {
+            color: #569CD6;
+        }
+        .string {
+            color: #CE9178;
+        }
+        .function {
+            color: #DCDCAA;
+        }
+        .class-name {
+            color: #4EC9B0;
+        }
+        .parameter {
+            color: #9CDCFE;
+        }
+        .self {
+            color: #569CD6;
         }
     </style>
 </head>
@@ -113,21 +137,23 @@
 
     <div class="code-link">
         <div class="question">Q7. Robot Code Implementation</div>
-        <div class="code-block">
-# Class definition
-class Robot:
-    def __init__(self, name, color, can_move):
-        self.name = name
-        self.color = color
-        self.can_move = can_move
-    def move(self):  # Method
-        if self.can_move:
-            print(f"{self.name} is moving!")
-        else:
-            print(f"{self.name} can't move.")
-# Create an object (instance)
-r2d2 = Robot("R2D2", "Red", True)
-# Call the method
+        <div class="code-block"><span class="comment"># Class definition</span>
+<span class="keyword">class</span> <span class="class-name">Robot</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="self">self</span>, <span class="parameter">name</span>, <span class="parameter">color</span>, <span class="parameter">can_move</span>):
+        <span class="self">self</span>.name = name
+        <span class="self">self</span>.color = color
+        <span class="self">self</span>.can_move = can_move
+
+    <span class="keyword">def</span> <span class="function">move</span>(<span class="self">self</span>):  <span class="comment"># Method</span>
+        <span class="keyword">if</span> <span class="self">self</span>.can_move:
+            <span class="function">print</span>(<span class="string">f"{self.name} is moving!"</span>)
+        <span class="keyword">else</span>:
+            <span class="function">print</span>(<span class="string">f"{self.name} can't move."</span>)
+
+<span class="comment"># Create an object (instance)</span>
+r2d2 = <span class="class-name">Robot</span>(<span class="string">"R2D2"</span>, <span class="string">"Red"</span>, <span class="keyword">True</span>)
+
+<span class="comment"># Call the method</span>
 r2d2.move()</div>
         <p>The code of the robot can be found <a href="POO.html">here</a></p>
     </div>
