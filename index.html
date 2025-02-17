@@ -47,6 +47,14 @@
         a:hover {
             text-decoration: underline;
         }
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre;
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
@@ -105,6 +113,22 @@
 
     <div class="code-link">
         <div class="question">Q7. Robot Code Implementation</div>
+        <div class="code-block">
+# Class definition
+class Robot:
+    def __init__(self, name, color, can_move):
+        self.name = name
+        self.color = color
+        self.can_move = can_move
+    def move(self):  # Method
+        if self.can_move:
+            print(f"{self.name} is moving!")
+        else:
+            print(f"{self.name} can't move.")
+# Create an object (instance)
+r2d2 = Robot("R2D2", "Red", True)
+# Call the method
+r2d2.move()</div>
         <p>The code of the robot can be found <a href="POO.html">here</a></p>
     </div>
 </body>
