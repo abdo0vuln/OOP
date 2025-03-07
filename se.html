@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Permissions & Groups - Complete Guide</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-bg: #f9f9f9;
+            --dark-bg: #222;
+            --text-color: #333;
+            --light-text: #f4f4f4;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+        }
+        
+        code {
+            background-color: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+        }
+        
+        pre {
+            background: var(--dark-bg);
+            color: var(--light-text);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+        
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .important {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 15px;
+            background-color: rgba(231, 76, 60, 0.1);
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        table th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding: 12px;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            background-color: white;
+        }
+        
+        table tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+        
+        .permission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .note {
+            background-color: #fffde7;
+            border-left: 4px solid #ffd600;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .tip {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .tab-container {
+            margin: 20px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: -1px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #e0e0e0;
+            margin-right: 5px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0 8px 8px 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Linux Permissions & Groups</h1>
+            <p>A comprehensive guide to understanding and managing Linux file permissions and user groups</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="box">
+            <h2>Understanding File Permissions</h2>
+            <p>In Linux, every file and directory has specific permissions that control who can access, modify, and execute them. These permissions are assigned to three types of owners:</p>
+            <ul>
+                <li><strong>Owner (u)</strong> - The user who owns the file.</li>
+                <li><strong>Group (g)</strong> - A group of users who can access the file.</li>
+                <li><strong>Others (o)</strong> - Everyone else on the system.</li>
+            </ul>
+            
+            <h3>Permission Types</h3>
+            <table>
+                <tr>
+                    <th>Permission</th>
+                    <th>Symbol</th>
+                    <th>For Files</th>
+                    <th>For Directories</th>
+                </tr>
+                <tr>
+                    <td>Read</td>
+                    <td><code>r</code></td>
+                    <td>View file contents</td>
+                    <td>List directory contents (<code>ls</code>)</td>
+                </tr>
+                <tr>
+                    <td>Write</td>
+                    <td><code>w</code></td>
+                    <td>Modify file contents</td>
+                    <td>Create/delete files within directory</td>
+                </tr>
+                <tr>
+                    <td>Execute</td>
+                    <td><code>x</code></td>
+                    <td>Run the file as a program</td>
+                    <td>Enter the directory (<code>cd</code>)</td>
+                </tr>
+            </table>
+            
+            <h3>Reading Permissions</h3>
+            <p>When you run <code>ls -l</code>, you'll see permissions displayed like this:</p>
+            <pre>-rwxr-xr-- 1 makino developers 1234 Mar 7 12:00 file.txt</pre>
+            
+            <div class="permission-grid">
+                <div>
+                    <h4>Breaking down the permissions:</h4>
+                    <ul>
+                        <li>First character: File type (<code>-</code> for regular file, <code>d</code> for directory)</li>
+                        <li>Next 3 characters: Owner permissions (<code>rwx</code>)</li>
+                        <li>Next 3 characters: Group permissions (<code>r-x</code>)</li>
+                        <li>Last 3 characters: Others permissions (<code>r--</code>)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Numeric Representation:</h4>
+                    <ul>
+                        <li><code>r</code> (read) = 4</li>
+                        <li><code>w</code> (write) = 2</li>
+                        <li><code>x</code> (execute) = 1</li>
+                        <li>No permission = 0</li>
+                    </ul>
+                    <p>Example: <code>rwxr-xr--</code> = 754</p>
+                    <ul>
+                        <li>Owner (7): read (4) + write (2) + execute (1) = 7</li>
+                        <li>Group (5): read (4) + execute (1) = 5</li>
+                        <li>Others (4): read (4) = 4</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2>Changing Permissions</h2>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'symbolic')">Symbolic Method</div>
+                    <div class="tab" onclick="switchTab(event, 'numeric')">Numeric Method</div>
+                </div>
+                
+                <div id="symbolic" class="tab-content active">
+                    <p>The symbolic method uses letters and symbols:</p>
+                    <ul>
+                        <li><code>u</code> = user/owner</li>
+                        <li><code>g</code> = group</li>
+                        <li><code>o</code> = others</li>
+                        <li><code>a</code> = all (same as ugo)</li>
+                        <li><code>+</code> = add permission</li>
+                        <li><code>-</code> = remove permission</li>
+                        <li><code>=</code> = set exact permission</li>
+                    </ul>
+                    
+                    <h4>Examples:</h4>
+                    <pre># Give execute to owner
+chmod u+x filename
+
+# Remove write from group
+chmod g-w filename
+
+# Give read and execute to others
+chmod o+rx filename
+
+# Add write permission for owner and group
+chmod ug+w filename
+
+# Remove all permissions for others
+chmod o-rwx filename
+
+# Set exact permissions (read-write for owner, read for group and others)
+chmod u=rw,g=r,o=r filename</pre>
+                </div>
+                
+                <div id="numeric" class="tab-content">
+                    <p>The numeric method uses 3 or 4 digits to represent permissions:</p>
+                    <pre># Full access to owner only (rwx------)
+chmod 700 filename
+
+# Read-write for owner, read for group and others (rw-r--r--)
+chmod 644 filename
+
+# All permissions for owner, read-execute for group and others (rwxr-xr-x)
+chmod 755 filename
+
+# All permissions for everyone (rwxrwxrwx)
+chmod 777 filename
+
+# Read-only for owner, no access for others (r--------)
+chmod 400 filename</pre>
+                    
+                    <div class="note">
+                        <strong>Note:</strong> Using <code>777</code> is generally not recommended for security reasons as it gives everyone full access.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2>Special Permissions</h2>
+            
+            <p>Linux has three special permission bits that provide additional functionality:</p>
+            
+            <table>
+                <tr>
+                    <th>Permission</th>
+                    <th>Numeric Value</th>
+                    <th>Effect on Files</th>
+                    <th>Effect on Directories</th>
+                </tr>
+                <tr>
+                    <td>SetUID</td>
+                    <td>4000</td>
+                    <td>File executes with the permissions of the owner</td>
+                    <td>No effect</td>
+                </tr>
+                <tr>
+                    <td>SetGID</td>
+                    <td>2000</td>
+                    <td>File executes with the permissions of the group</td>
+                    <td>New files inherit the directory's group</td>
+                </tr>
+                <tr>
+                    <td>Sticky Bit</td>
+                    <td>1000</td>
+                    <td>No effect</td>
+                    <td>Only the owner can delete or rename files</td>
+                </tr>
+            </table>
+            
+            <h4>Examples:</h4>
+            <pre># Set the SetUID bit
+chmod u+s filename  # Symbolic method
+chmod 4755 filename  # Numeric method (4 prefix)
+
+# Set the SetGID bit
+chmod g+s directory  # Symbolic method
+chmod 2755 directory  # Numeric method (2 prefix)
+
+# Set the Sticky Bit
+chmod +t directory  # Symbolic method
+chmod 1755 directory  # Numeric method (1 prefix)
+
+# Setting multiple special permissions
+chmod 3755 directory  # SetGID + Sticky Bit (2+1)</pre>
+            
+            <div class="important">
+                <strong>Important:</strong> SetUID and SetGID can present security risks if misused, especially on executable files.
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2>Working with Groups</h2>
+            
+            <h3>Checking Group Information</h3>
+            <pre># Check which groups a user belongs to
+id username
+
+# Check only the groups
+groups username
+
+# Check if a user is in a specific group
+getent group groupname
+
+# List all groups on the system
+cat /etc/group</pre>
+            
+            <h3>Managing Group Ownership</h3>
+            <pre># Change the group owner of a file
+chgrp developers filename
+
+# Alternative way using chown
+chown :developers filename
+
+# Change both owner and group
+chown username:groupname filename
+
+# Recursively change group ownership (for directories)
+chgrp -R developers directory/</pre>
+            
+            <h3>Creating and Managing Groups</h3>
+            <pre># Create a new group (requires root privileges)
+sudo groupadd newgroup
+
+# Add a user to a group
+sudo usermod -aG groupname username
+
+# Remove a user from a group
+sudo gpasswd -d username groupname
+
+# Delete a group
+sudo groupdel groupname</pre>
+            
+            <div class="tip">
+                <strong>Tip:</strong> After adding a user to a new group, they may need to log out and log back in for the changes to take effect, or they can use the command <code>newgrp groupname</code> to activate the new group without logging out.
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2>Understanding umask</h2>
+            
+            <p>The <code>umask</code> (user mask) defines the default permissions that are applied when new files and directories are created. It subtracts permissions from the maximum possible values (666 for files, 777 for directories).</p>
+            
+            <h3>Viewing Current umask</h3>
+            <pre># Display current umask (octal format)
+umask
+
+# Display umask in symbolic format
+umask -S</pre>
+            
+            <h3>Setting umask</h3>
+            <pre># Set umask for current session
+umask 022
+
+# To make it permanent, add to shell configuration:
+echo "umask 022" >> ~/.bashrc  # For individual users
+sudo echo "umask 022" >> /etc/profile  # System-wide</pre>
+            
+            <h3>Common umask Values</h3>
+            <table>
+                <tr>
+                    <th>umask</th>
+                    <th>File Permissions</th>
+                    <th>Directory Permissions</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td><code>000</code></td>
+                    <td>666 (rw-rw-rw-)</td>
+                    <td>777 (rwxrwxrwx)</td>
+                    <td>No restrictions (insecure)</td>
+                </tr>
+                <tr>
+                    <td><code>022</code></td>
+                    <td>644 (rw-r--r--)</td>
+                    <td>755 (rwxr-xr-x)</td>
+                    <td>Standard umask (default on most systems)</td>
+                </tr>
+                <tr>
+                    <td><code>027</code></td>
+                    <td>640 (rw-r-----)</td>
+                    <td>750 (rwxr-x---)</td>
+                    <td>More restrictive, no access for others</td>
+                </tr>
+                <tr>
+                    <td><code>077</code></td>
+                    <td>600 (rw-------)</td>
+                    <td>700 (rwx------)</td>
+                    <td>Most restrictive, owner-only access</td>
+                </tr>
+            </table>
+            
+            <div class="note">
+                <p><strong>Understanding umask calculation:</strong></p>
+                <p>umask <code>022</code> applied to a file:</p>
+                <ul>
+                    <li>Maximum file permissions: <code>666</code></li>
+                    <li>Subtract umask: <code>666 - 022 = 644</code></li>
+                    <li>Result: <code>rw-r--r--</code></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2>Directory Permissions in Detail</h2>
+            
+            <p>Directory permissions behave differently than file permissions:</p>
+            
+            <div class="permission-grid">
+                <div>
+                    <h3>Read Permission (r)</h3>
+                    <ul>
+                        <li>Allows listing the contents of the directory (<code>ls</code>)</li>
+                        <li>Without read permission, you can't see what's in the directory</li>
+                        <li>You can still access files if you know their names (with execute permission)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Write Permission (w)</h3>
+                    <ul>
+                        <li>Allows creating/deleting files within the directory</li>
+                        <li>Allows renaming files in the directory</li>
+                        <li>Must be combined with execute permission to be useful</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Execute Permission (x)</h3>
+                    <ul>
+                        <li>Allows accessing the directory (<code>cd</code>)</li>
+                        <li>Allows accessing files within the directory</li>
+                        <li>Without execute, you cannot use the directory at all</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Common Directory Permission Patterns</h3>
+            <pre># Read-only directory (can list but not enter)
+chmod 400 mydir
+
+# List and access files, but not modify
+chmod 500 mydir
+
+# Read-only access with ability to enter
+chmod 555 mydir
+
+# Full access to owner, read-execute to group, nothing for others
+chmod 750 mydir
+
+# Shared directory (group members can add/modify files)
+chmod 775 mydir</pre>
+            
+            <div class="important">
+                <p><strong>Important:</strong> For a directory to be useful, it typically needs at least execute (<code>x</code>) permission. A common mistake is setting read-only (<code>r</code>) permission without execute, which prevents accessing files in the directory.</p>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2>Real-World Permission Examples</h2>
+            
+            <h3>Setting Up a Shared Directory</h3>
+            <pre># Create a directory for a team
+sudo mkdir /shared/project
+
+# Change ownership to a specific user
+sudo chown admin:developers /shared/project
+
+# Set permissions so all group members can add/modify files
+sudo chmod 770 /shared/project
+
+# Make new files inherit the group
+sudo chmod g+s /shared/project</pre>
+            
+            <h3>Securing Configuration Files</h3>
+            <pre># Make a config file readable but not writeable by others
+chmod 644 config.ini
+
+# Make a sensitive config file accessible only to owner
+chmod 600 secret_config.ini</pre>
+            
+            <h3>Executable Scripts</h3>
+            <pre># Make a script executable for everyone
+chmod +x script.sh
+
+# Make a script executable only for owner and group
+chmod 750 admin_script.sh</pre>
+            
+            <h3>Special Case: Group Permissions and Execution</h3>
+            <p>If a user belongs to a group and the group has execute (<code>x</code>) permission, but the user does not have execute individually, <strong>the user CAN execute</strong> the file.</p>
+            <pre>-r--r-x--- 1 root developers 1234 Mar 7 12:00 script.sh</pre>
+            <p>If <code>makino</code> is in the <code>developers</code> group, they can execute <code>script.sh</code> even though the owner permissions don't have execute set.</p>
+        </div>
+        
+        <div class="box">
+            <h2>Advanced Topics</h2>
+            
+            <h3>Access Control Lists (ACLs)</h3>
+            <p>ACLs provide more fine-grained access control beyond the basic permissions model.</p>
+            <pre># Install ACL packages (if not already installed)
+sudo apt-get install acl  # For Debian/Ubuntu
+sudo yum install acl      # For RHEL/CentOS
+
+# View ACLs on a file
+getfacl filename
+
+# Set a specific user permission
+setfacl -m u:username:rwx filename
+
+# Set a specific group permission
+setfacl -m g:groupname:rx filename
+
+# Remove a specific ACL
+setfacl -x u:username filename
+
+# Recursive ACL on directory and all contents
+setfacl -R -m g:developers:rwx directory/</pre>
+            
+            <h3>Default ACLs for Directories</h3>
+            <p>Default ACLs are applied automatically to new files created within a directory.</p>
+            <pre># Set default ACL for new files in a directory
+setfacl -d -m g:developers:rwx project_dir/</pre>
+            
+            <h3>Checking for Security Issues</h3>
+            <pre># Find world-writable files (potentially insecure)
+find /path -type f -perm -002 -print
+
+# Find SUID files (can be security risks)
+find /path -type f -perm -4000 -print
+
+# Find files not owned by any user/group
+find /path -nouser -o -nogroup -print</pre>
+        </div>
+        
+        <div class="box">
+            <h2>Troubleshooting Permission Issues</h2>
+            
+            <h3>Common Problems and Solutions</h3>
+            <div class="permission-grid">
+                <div>
+                    <h4>Problem: "Permission denied" when running a script</h4>
+                    <p><strong>Solutions:</strong></p>
+                    <ul>
+                        <li>Check if the script has execute permission: <code>ls -l script.sh</code></li>
+                        <li>Add execute permission: <code>chmod +x script.sh</code></li>
+                        <li>Run as another user: <code>sudo ./script.sh</code></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Problem: Can't modify a file</h4>
+                    <p><strong>Solutions:</strong></p>
+                    <ul>
+                        <li>Check ownership: <code>ls -l filename</code></li>
+                        <li>Change ownership: <code>sudo chown username filename</code></li>
+                        <li>Add write permission: <code>chmod u+w filename</code></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Problem: Can't access a directory</h4>
+                    <p><strong>Solutions:</strong></p>
+                    <ul>
+                        <li>Check if you have execute permission on all parent directories</li>
+                        <li>Add execute permission: <code>chmod +x directory</code></li>
+                        <li>Check for SELinux or AppArmor restrictions</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Debug Commands</h3>
+            <pre># Check effective permissions for a specific user
+sudo -u username ls -la /path/to/check
+
+# Check capability of a file
+getcap filename
+
+# Trace system calls for permission debugging
+strace -e trace=access,stat,open command
+
+# See what files a process is accessing
+lsof -p process_id</pre>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Linux Permissions & Groups Guide - Last Updated: March 2025</p>
+    </footer>
+    
+    <script>
+        function switchTab(event, tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Deactivate all tabs
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add("active");
+            
+            // Activate the clicked tab
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
